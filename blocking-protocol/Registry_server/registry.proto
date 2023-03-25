@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+
+service Registry{
+  
+   rpc GetServerList(Message) returns (Message) {}
+   rpc RegisterServer(Message) returns (Message) {}
+
+}
+
+message Message{
+   string message = 1;
+}
