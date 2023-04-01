@@ -7,9 +7,31 @@ service Server{
   
    
    rpc RegisterReplicaPrimary(Message) returns (Message) {}
+   rpc ReadFile(Message) returns (Message4){}
+   rpc WriteFile(Message2) returns (Message3){}
+   rpc DeleteFile(Message) returns (Message){}
 
 }
 
 message Message{
    string message = 1;
+}
+
+message Message2{
+   string name = 1;
+   string content = 2;
+   string uuid_ = 3;
+}
+
+message Message3{
+   string status= 1;
+   string uuid_ = 2;
+   string version = 3;
+}
+ 
+message Message4{
+   string status = 1;
+   string name = 2;
+   string content =3;
+   string version = 4;
 }

@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cserver.proto\x12\x03\x61\x32\x31\"\x1a\n\x07Message\x12\x0f\n\x07message\x18\x01 \x01(\t2@\n\x06Server\x12\x36\n\x16RegisterReplicaPrimary\x12\x0c.a21.Message\x1a\x0c.a21.Message\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cserver.proto\x12\x03\x61\x32\x31\"\x1a\n\x07Message\x12\x0f\n\x07message\x18\x01 \x01(\t\"8\n\x08Message2\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\x12\r\n\x05uuid_\x18\x03 \x01(\t\":\n\x08Message3\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\r\n\x05uuid_\x18\x02 \x01(\t\x12\x0f\n\x07version\x18\x03 \x01(\t\"J\n\x08Message4\x12\x0e\n\x06status\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\x0f\n\x07version\x18\x04 \x01(\t2\xc4\x01\n\x06Server\x12\x36\n\x16RegisterReplicaPrimary\x12\x0c.a21.Message\x1a\x0c.a21.Message\"\x00\x12)\n\x08ReadFile\x12\x0c.a21.Message\x1a\r.a21.Message4\"\x00\x12+\n\tWriteFile\x12\r.a21.Message2\x1a\r.a21.Message3\"\x00\x12*\n\nDeleteFile\x12\x0c.a21.Message\x1a\x0c.a21.Message\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'server_pb2', globals())
@@ -22,6 +22,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _MESSAGE._serialized_start=21
   _MESSAGE._serialized_end=47
-  _SERVER._serialized_start=49
-  _SERVER._serialized_end=113
+  _MESSAGE2._serialized_start=49
+  _MESSAGE2._serialized_end=105
+  _MESSAGE3._serialized_start=107
+  _MESSAGE3._serialized_end=165
+  _MESSAGE4._serialized_start=167
+  _MESSAGE4._serialized_end=241
+  _SERVER._serialized_start=244
+  _SERVER._serialized_end=440
 # @@protoc_insertion_point(module_scope)

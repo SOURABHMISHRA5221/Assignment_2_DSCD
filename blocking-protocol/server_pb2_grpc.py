@@ -19,6 +19,21 @@ class ServerStub(object):
                 request_serializer=server__pb2.Message.SerializeToString,
                 response_deserializer=server__pb2.Message.FromString,
                 )
+        self.ReadFile = channel.unary_unary(
+                '/a21.Server/ReadFile',
+                request_serializer=server__pb2.Message.SerializeToString,
+                response_deserializer=server__pb2.Message4.FromString,
+                )
+        self.WriteFile = channel.unary_unary(
+                '/a21.Server/WriteFile',
+                request_serializer=server__pb2.Message2.SerializeToString,
+                response_deserializer=server__pb2.Message3.FromString,
+                )
+        self.DeleteFile = channel.unary_unary(
+                '/a21.Server/DeleteFile',
+                request_serializer=server__pb2.Message.SerializeToString,
+                response_deserializer=server__pb2.Message.FromString,
+                )
 
 
 class ServerServicer(object):
@@ -30,11 +45,44 @@ class ServerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ReadFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def WriteFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ServerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'RegisterReplicaPrimary': grpc.unary_unary_rpc_method_handler(
                     servicer.RegisterReplicaPrimary,
+                    request_deserializer=server__pb2.Message.FromString,
+                    response_serializer=server__pb2.Message.SerializeToString,
+            ),
+            'ReadFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReadFile,
+                    request_deserializer=server__pb2.Message.FromString,
+                    response_serializer=server__pb2.Message4.SerializeToString,
+            ),
+            'WriteFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.WriteFile,
+                    request_deserializer=server__pb2.Message2.FromString,
+                    response_serializer=server__pb2.Message3.SerializeToString,
+            ),
+            'DeleteFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteFile,
                     request_deserializer=server__pb2.Message.FromString,
                     response_serializer=server__pb2.Message.SerializeToString,
             ),
@@ -60,6 +108,57 @@ class Server(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/a21.Server/RegisterReplicaPrimary',
+            server__pb2.Message.SerializeToString,
+            server__pb2.Message.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ReadFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/a21.Server/ReadFile',
+            server__pb2.Message.SerializeToString,
+            server__pb2.Message4.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def WriteFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/a21.Server/WriteFile',
+            server__pb2.Message2.SerializeToString,
+            server__pb2.Message3.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/a21.Server/DeleteFile',
             server__pb2.Message.SerializeToString,
             server__pb2.Message.FromString,
             options, channel_credentials,
