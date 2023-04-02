@@ -7,11 +7,11 @@ service Server{
   
    
    rpc RegisterReplicaPrimary(Message) returns (Message) {}
-   rpc ReadFile(Message)               returns (Message4){}
-   rpc WriteFile(Message2)             returns (Message3){}
-   rpc DeleteFile(Message)             returns (Message){}
-   rpc PrimaryWrite(Message5)          returns (Message){}
-   rpc ServerWrite(Message2)           returns (Message){}
+   rpc ReadFile(Message)      returns (Message4){}
+   rpc WriteFile(Message2)    returns (Message3){}
+   rpc DeleteFile(Message)    returns (Message){}
+   rpc PrimaryWrite(Message5) returns (Message){}
+   rpc ServerWrite(Message2)  returns (Message){}
 }
 
 message Message{
@@ -40,6 +40,6 @@ message Message4{
 message Message5{
    string name = 1;
    string content = 2;
-   string uuid =3;
+   string uuid_ =3;
    string myport = 4;
 }

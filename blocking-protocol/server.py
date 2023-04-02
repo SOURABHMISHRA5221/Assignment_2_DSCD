@@ -10,9 +10,9 @@ from datetime import datetime
 list_of_replicas = []
 primary_server = -1
 i_am_primary = True
-server_port = 5030
+server_port = 5100
 files  = {}
-names  = {}
+names  = []
 class PClient():
     def __init__(self,port):
         self.host = 'localhost'
@@ -23,9 +23,14 @@ class PClient():
     def register_server(self,message):
         message = pb2.Message(message=message)
         result = self.stub.RegisterServer(message).message.split()
+        global primary_server
+        global i_am_primary
+        global server_port
         if (len(result)  != 1):
             primary_server = int(result[1])
             i_am_primary = False
+        else:
+            primary_server = server_port
         return result[0]
 
     def server_write(self,name_,content_,uuid_,port):
@@ -33,16 +38,17 @@ class PClient():
         self.server_port = port
         self.channel = grpc.insecure_channel('{}:{}'.format(self.host, self.server_port))
         self.stub = spb2_grpc.ServerStub(self.channel)
-        message2 = spb2.Message2(name=name_,content=content_,uuid=uuid_)
+        message2 = spb2.Message2(name=name_,content=content_,uuid_=uuid_)
         return self.stub.ServerWrite(message2)
 
     def primary_write(self,name_,content_,uuid_,myPort):
         global primary_server
+        print("primary server =",primary_server)
         self.host = 'localhost'
         self.server_port = primary_server
         self.channel = grpc.insecure_channel('{}:{}'.format(self.host, self.server_port))
         self.stub = spb2_grpc.ServerStub(self.channel)
-        message5 = spb2.Message5(name=name_,content=content_,uuid=uuid_,myport=str(myPort))
+        message5 = spb2.Message5(name=name_,content=content_,uuid_=uuid_,myport=str(myPort))
         return self.stub.PrimaryWrite(message5)
 
 
@@ -50,11 +56,11 @@ class PClient():
 
 
 c = PClient(50051)
-print(c.register_server(message=str(5030)))
+print(c.register_server(message=str(server_port)))
 
 
 
-list_of_servers = []
+list_of_replicas = []
 max_servers = 5
 primary_server_port = -1
 primary_server_client = -1
@@ -64,8 +70,9 @@ class ServerService(spb2_grpc.ServerServicer):
         pass
 
     def RegisterReplicaPrimary(self, request, context):
+        global list_of_replicas
         message = request.message
-        print(message)
+        list_of_replicas+=[int(message)]
         result = {'message': "Done!!!"}
         return spb2.Message(**result)
 
@@ -76,15 +83,21 @@ class ServerService(spb2_grpc.ServerServicer):
         if ( uuid not in files):
             if ( name in names):
                 #file with name exist
+                print("FE")
                 return "FAIL FE"
             else:
                 #new File
-                files[uuid][name] = name
-                files[uuid][version] = datetime.now()
+                files[uuid] = {'name':'','version':''}
+                print("1")
+                files[uuid]['name'] = name
+                print('2')
+                files[uuid]['version'] = datetime.now()
+                print('3')
+                names+=[name]
                 f = open(name+'.txt','w')
                 f.write(content)
                 f.close()
-                files[uuid][version] = datetime.now()
+                print("ye chla2")
                 return "SUCCESS"
         else:
             if ( name in names):
@@ -92,10 +105,11 @@ class ServerService(spb2_grpc.ServerServicer):
                 f = open(name+'.txt','w')
                 f.write(content)
                 f.close()
-                files[uuid][version] = datetime.now()
+                files[uuid]['version'] = datetime.now()
                 return "SUCCESS"
             else:
                 #deleted File
+                print("DF")
                 return "FAIL DF"
         
 
@@ -105,14 +119,14 @@ class ServerService(spb2_grpc.ServerServicer):
         global primary_server
         name_ = request.name 
         content_ = request.content
-        uuid_ = request.uuid 
+        uuid_ = request.uuid_
         myport = int(request.myport)
-        mes = self.write(name,content,uuid)
+        mes = self.write(name_,content_,uuid_)
         if (mes == 'SUCCESS'):
             for replica in list_of_replicas:
-                if ( replica != myport)
+                if ( replica != myport):
                     c.server_write(name_,content_,uuid_,replica)
-            if ( myport != primary_server)
+            if ( myport != primary_server):
                 c.server_write(name_,content_,uuid_,myport)
             result = {'message': mes}
             return spb2.Message(**result)
@@ -126,8 +140,8 @@ class ServerService(spb2_grpc.ServerServicer):
     def ServerWrite(self, request, context):
         name_ = request.name 
         content_ = request.content
-        uuid_ = request.uuid 
-        mes = self.write(name,content,uuid)
+        uuid_ = request.uuid_ 
+        mes = self.write(name_,content_,uuid_)
         result = {'message': mes}
         return spb2.Message(**result)
 
@@ -137,23 +151,32 @@ class ServerService(spb2_grpc.ServerServicer):
         global i_am_primary
         name_ = request.name 
         content_ = request.content
-        uuid_ = request.uuid 
+        uuid_ = request.uuid_ 
         res = c.primary_write(name_,content_,uuid_,server_port)
         if ( res.message == 'SUCCESS'):
-            result = {'status':'SUCCESS','uuid':uuid_,'version':files[uuid_][version]}
+            result = {'status':'SUCCESS','uuid_':uuid_,'version':str(files[uuid_]['version'])}
             return spb2.Message3(**result)
         else:
-            result = {'status':'FAIL','uuid':'NULL','version':'NULL'}
+            result = {'status':'FAIL','uuid_':'NULL','version':'NULL'}
             return spb2.Message3(**result)
     
     def ReadFile(self, request, context):
         uuid_ = request.message
         global files
+        global names
         if ( uuid_ in files):
+            name = files[uuid_]['name']
+            if ( name not in names):
+                status = "File Deleted"
+                name = 'NULL'
+                version = 'NULL'
+                content = 'NULL'
+                result = {'status':status,'name':name,'content':content,'version':version}
+                return spb2.Message4(**result)
             status = "SUCCESS"
-            name = files[uuid_][name]
-            version = files[uuid_][version]
-            f = open(name,'r')
+            name = files[uuid_]['name']
+            version = str(files[uuid_]['version'])
+            f = open(name+'.txt','r')
             content = ""
             for line in f:
                 content+=line 
@@ -173,7 +196,7 @@ class ServerService(spb2_grpc.ServerServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     spb2_grpc.add_ServerServicer_to_server(ServerService(), server)
-    server.add_insecure_port('[::]:5030')
+    server.add_insecure_port('[::]:'+str(server_port))
     server.start()
     server.wait_for_termination()
 

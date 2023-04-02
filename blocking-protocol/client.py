@@ -37,10 +37,11 @@ class PClient():
         self.channel = grpc.insecure_channel('{}:{}'.format(self.host, self.server_port))
         self.stub = spb2_grpc.ServerStub(self.channel)
     def read(self,file):
-        message = spb2.Message(message=u_id)
+        message = spb2.Message(message=file)
         return self.stub.ReadFile(message)
-    def write(self,uuid_,name_,content_):
-        message = spb2.Message2(name =name_,content = content_ ,uuid_ = uuid)
+    def write(self,uid,name_,content_):
+        res ={'name':name_,'content':content_ ,'uuid_':uid}
+        message = spb2.Message2(**res)
         return self.stub.WriteFile(message)
     def delete(self,file):
         message = spb2.Message(message=file)
@@ -73,13 +74,16 @@ while(not exit_):
                 print( f,files[f])
             res = int(input("enter file no. "))
             file_id = files[res]
+            print(file_id)
         else:
-            new_file = str(uuid.uuid1())
+            file_id = str(uuid.uuid1())
         name    = input("name: ")
         content = input("content: ")
         result = client.write(file_id,name,content)
         print(result.status)
-        print(result.uuid)
+        if ( result.status == 'SUCCESS'):
+            files+=[file_id]
+        print(result.uuid_)
         print(result.version)
     elif (v == 2):
         port = int(input("port: "))
