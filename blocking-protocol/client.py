@@ -84,7 +84,7 @@ while(not exit_):
     elif (v == 2):
         port = int(input("port: "))
         client.config(port)
-        file_id = -1
+        file_id = '-1'
         for f in range(len(files)):
                 print( f,files[f])
         res = int(input("enter file no. "))

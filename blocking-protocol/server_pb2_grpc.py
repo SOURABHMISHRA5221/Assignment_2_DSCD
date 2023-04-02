@@ -34,6 +34,16 @@ class ServerStub(object):
                 request_serializer=server__pb2.Message.SerializeToString,
                 response_deserializer=server__pb2.Message.FromString,
                 )
+        self.PrimaryWrite = channel.unary_unary(
+                '/a21.Server/PrimaryWrite',
+                request_serializer=server__pb2.Message5.SerializeToString,
+                response_deserializer=server__pb2.Message.FromString,
+                )
+        self.ServerWrite = channel.unary_unary(
+                '/a21.Server/ServerWrite',
+                request_serializer=server__pb2.Message2.SerializeToString,
+                response_deserializer=server__pb2.Message.FromString,
+                )
 
 
 class ServerServicer(object):
@@ -63,6 +73,18 @@ class ServerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def PrimaryWrite(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ServerWrite(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ServerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -84,6 +106,16 @@ def add_ServerServicer_to_server(servicer, server):
             'DeleteFile': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteFile,
                     request_deserializer=server__pb2.Message.FromString,
+                    response_serializer=server__pb2.Message.SerializeToString,
+            ),
+            'PrimaryWrite': grpc.unary_unary_rpc_method_handler(
+                    servicer.PrimaryWrite,
+                    request_deserializer=server__pb2.Message5.FromString,
+                    response_serializer=server__pb2.Message.SerializeToString,
+            ),
+            'ServerWrite': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerWrite,
+                    request_deserializer=server__pb2.Message2.FromString,
                     response_serializer=server__pb2.Message.SerializeToString,
             ),
     }
@@ -160,6 +192,40 @@ class Server(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/a21.Server/DeleteFile',
             server__pb2.Message.SerializeToString,
+            server__pb2.Message.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PrimaryWrite(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/a21.Server/PrimaryWrite',
+            server__pb2.Message5.SerializeToString,
+            server__pb2.Message.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ServerWrite(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/a21.Server/ServerWrite',
+            server__pb2.Message2.SerializeToString,
             server__pb2.Message.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

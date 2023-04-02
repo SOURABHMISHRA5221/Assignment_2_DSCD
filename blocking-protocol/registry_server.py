@@ -57,6 +57,7 @@ class RegistryService(pb2_grpc.RegistryServicer):
             response = "FAIL"
         result = {'message': response}
         return pb2.Message(**result)
+    
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
