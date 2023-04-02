@@ -15,12 +15,12 @@ class RegistryStub(object):
             channel: A grpc.Channel.
         """
         self.GetServerList = channel.unary_unary(
-                '/Registry/GetServerList',
+                '/a22.Registry/GetServerList',
                 request_serializer=registry__pb2.Message.SerializeToString,
                 response_deserializer=registry__pb2.Message.FromString,
                 )
         self.RegisterServer = channel.unary_unary(
-                '/Registry/RegisterServer',
+                '/a22.Registry/RegisterServer',
                 request_serializer=registry__pb2.Message.SerializeToString,
                 response_deserializer=registry__pb2.Message.FromString,
                 )
@@ -56,7 +56,7 @@ def add_RegistryServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Registry', rpc_method_handlers)
+            'a22.Registry', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -75,7 +75,7 @@ class Registry(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Registry/GetServerList',
+        return grpc.experimental.unary_unary(request, target, '/a22.Registry/GetServerList',
             registry__pb2.Message.SerializeToString,
             registry__pb2.Message.FromString,
             options, channel_credentials,
@@ -92,7 +92,7 @@ class Registry(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Registry/RegisterServer',
+        return grpc.experimental.unary_unary(request, target, '/a22.Registry/RegisterServer',
             registry__pb2.Message.SerializeToString,
             registry__pb2.Message.FromString,
             options, channel_credentials,
