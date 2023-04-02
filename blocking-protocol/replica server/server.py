@@ -10,7 +10,7 @@ from datetime import datetime
 list_of_replicas = []
 primary_server = -1
 i_am_primary = True
-server_port = 5100
+server_port = 5200
 files  = {}
 names  = []
 class PClient():

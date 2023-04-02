@@ -12,6 +12,8 @@ service Server{
    rpc DeleteFile(Message)    returns (Message){}
    rpc PrimaryWrite(Message5) returns (Message){}
    rpc ServerWrite(Message2)  returns (Message){}
+   rpc PrimaryDelete(Message) returns (Message){}
+   rpc ServerDelete(Message)  returns (Message){}
 }
 
 message Message{
